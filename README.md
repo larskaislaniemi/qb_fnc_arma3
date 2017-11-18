@@ -8,7 +8,7 @@ These scripts are a collection of rather random scripts intended to help design 
 
 ## Usage
 
-Place script files in a directory named `qb` in your mission folder. Compile functions as needed, or call qb/qb_init.sqf to compile all of them. Call the scripts from the server, not clients.
+Place script files in a directory named `qb` in your mission folder. Compile functions as needed, or call `qb/qb_init.sqf` to compile all of them at once. Call the scripts from the server, not clients.
 
 ## Work in progress
 
@@ -17,4 +17,5 @@ Scripts are work in progress and may or may not work fully or not at all. Any co
 ## Contact
 
 quubba / abbuuq in Arma 3
+
 klasse@iki.fi
