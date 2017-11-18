@@ -10,6 +10,8 @@ These scripts are a collection of rather random scripts intended to help design 
 
 Place script files in a directory named `qb` in your mission folder. Compile functions as needed, or call `qb/qb_init.sqf` to compile all of them at once. Call the scripts from the server, not clients.
 
+See each script file for usage.
+
 ## Work in progress
 
 Scripts are work in progress and may or may not work fully or not at all. Any constructive feedback as well as contributions of new scripts or contributions to the existing scripts are welcome.
