@@ -18,6 +18,6 @@ Scripts are work in progress and may or may not work fully or not at all. Any co
 
 ## Contact
 
-quubba / abbuuq in Arma 3
-
-klasse@iki.fi
+- quubba / abbuuq in Arma 3
+- if.iki@essalk (backwards!)
+- Issue tracker on GitHub
