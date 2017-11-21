@@ -25,6 +25,7 @@ if (hasInterface) then {
                 _whohasit = _obj getVariable "pickObj_whoHas";
                 if ((not isNil "_pickedup") and (_pickedup)) then {
                     if ((not isNil "_whohasit") and (_whohasit == player)) then {
+                        detach _obj;
                         _obj setVariable ["pickObj_pickedUp", false, true];
                         //_obj setvariable ["pickObj_whoHas", 0, true]; // leave untouched to record previous owner
                         _newPos = [_me, 0.5] call qb_fnc_getPosNearObject;
@@ -48,6 +49,7 @@ if (hasInterface) then {
                     _whohasit = _obj getVariable "pickObj_whoHas";
                     if ((not isNil "_pickedup") and (_pickedup)) then {
                         if ((not isNil "_whohasit") and (_whohasit == player)) then {
+                            detach _obj;
                             _obj setVariable ["pickObj_pickedUp", false, true];
                             //_obj setvariable ["pickObj_whoHas", 0, true]; // leave untouched to record previous owner
                             _newPos = [_me, 0.5] call qb_fnc_getPosNearObject;
@@ -73,6 +75,13 @@ if (hasInterface) then {
             [ _obj, false ] remoteExec ["enableSimulation", 0, false];
             _obj setPosATL [0,0,0];
             
+            detach _obj;
+            _dims = boundingBoxReal trh_treasure;
+            _dims1 = _dims select 0;
+            _dims2 = _dims select 1;
+            _maxWidth = abs((_dims1 select 1)-(_dims2 select 1));
+            _obj attachTo [player, [0, -(_maxWidth/2.0+0.2), 0], "Pelvis"];
+            
             _actId = _unit addAction ["<t color='#ff0000'>Drop " + (_obj getVariable "pickObj_name") + "</t>", {
                 private ["_target", "_caller", "_id", "_args", "_obj"];
                 
@@ -83,6 +92,8 @@ if (hasInterface) then {
                 _obj = _args select 0;
                 
                 if (side _target != side _caller) exitWith {};
+                
+                detach _obj;
                 
                 _obj setVariable ["pickObj_pickedUp", false, true];
                 //_obj setvariable ["pickObj_whoHas", 0, true]; // leave untouched to record previous owner

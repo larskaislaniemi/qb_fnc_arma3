@@ -18,5 +18,5 @@ _range = _this select 1;
 _setPos = getMarkerPos _mrk;
 _dir = random 360;
 _range = random _range;
-_setPos = [(_setPos select 0)+_range*sin(_dir), (_setPos select 1)+_range*cos(_dir)];
+_setPos = [(_setPos select 0)+_range*sin(_dir), (_setPos select 1)+_range*cos(_dir), 0];
 _setPos
