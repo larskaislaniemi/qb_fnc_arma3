@@ -31,7 +31,7 @@ if (hasInterface) then {
                         _newPos = [_me, 0.5] call qb_fnc_getPosNearObject;
                         _newPos set [2, (getPosATL _me) select 2];
                         _obj setPosATL _newPos;
-                        [ _obj, true ] remoteExec ["enableSimulation", 0, false];
+                        //[ _obj, true ] remoteExec ["enableSimulation", 0, false];
                     };
                 };
             };
@@ -55,7 +55,7 @@ if (hasInterface) then {
                             _newPos = [_me, 0.5] call qb_fnc_getPosNearObject;
                             _newPos set [2, (getPosATL _me) select 2];
                             _obj setPosATL _newPos;
-                            [ _obj, true ] remoteExec ["enableSimulation", 0, false];
+                            //[ _obj, true ] remoteExec ["enableSimulation", 0, false];
                         };
                     };
                 };
@@ -63,52 +63,89 @@ if (hasInterface) then {
                 _me setVariable ["pickObj_unitDropActId", -1];
             };
         }];
+        
+        player addEventHandler ["GetInMan", {
+            _unit = _this select 0;
+            _position = _this select 1;
+            _vehicle = _this select 2;
+            _turret = _this select 3;
+            
+            _obj = _unit getVariable ["pickObj_obj", objNull];
+           
+            if (!isNull _obj) then {
+                detach _obj;
+                _obj setPosATL [0,0,0];
+            };
+        }];
+        
+        player addEventHandler ["GetOutMan", {
+            _unit = _this select 0;
+            _position = _this select 1;
+            _vehicle = _this select 2;
+            _turret = _this select 3;
+
+            _obj = _unit getVariable ["pickObj_obj", objNull];
+           
+            if (!isNull _obj) then {
+                detach _obj;
+                _dims = boundingBoxReal _obj;
+                _dims1 = _dims select 0;
+                _dims2 = _dims select 1;
+                _maxWidth = abs((_dims1 select 1)-(_dims2 select 1));
+                _obj attachTo [player, [0, -(_maxWidth/2.0+0.2), 0], "Pelvis"];
+            };
+        }];
 
         _actId = _obj addAction ["<t color='#ff0000'>Pick up " + (_obj getVariable "pickObj_name") + "</t>", {
             private ["_obj", "_unit", "_actId", "_evtId"];
             _obj = _this select 0;
             _unit = _this select 1;
-            _obj setVariable ["pickObj_whoHas", _unit, true];
-            _obj setVariable ["pickObj_pickedUp", true, true];
-            _unit setVariable ["pickObj_obj", _obj, true];
+            
+            if (_obj getVariable ["pickObj_pickedUp", false]) then {
+                _unitName = name (_obj getVariable ["pickObj_whoHas", objNull]);
+                hint format ["Seems like %1 does not want to give it to you!", _unitName];
+            } else {
+                _obj setVariable ["pickObj_whoHas", _unit, true];
+                _obj setVariable ["pickObj_pickedUp", true, true];
+                _unit setVariable ["pickObj_obj", _obj, true];
 
-            [ _obj, false ] remoteExec ["enableSimulation", 0, false];
-            _obj setPosATL [0,0,0];
-            
-            detach _obj;
-            _dims = boundingBoxReal trh_treasure;
-            _dims1 = _dims select 0;
-            _dims2 = _dims select 1;
-            _maxWidth = abs((_dims1 select 1)-(_dims2 select 1));
-            _obj attachTo [player, [0, -(_maxWidth/2.0+0.2), 0], "Pelvis"];
-            
-            _actId = _unit addAction ["<t color='#ff0000'>Drop " + (_obj getVariable "pickObj_name") + "</t>", {
-                private ["_target", "_caller", "_id", "_args", "_obj"];
-                
-                _target = _this select 0;
-                _caller = _this select 1;
-                _id = _this select 2;
-                _args = _this select 3;
-                _obj = _args select 0;
-                
-                if (side _target != side _caller) exitWith {};
+                //[ _obj, false ] remoteExec ["enableSimulation", 0, false];
+                _obj setPosATL [0,0,0];
                 
                 detach _obj;
+                _dims = boundingBoxReal _obj;
+                _dims1 = _dims select 0;
+                _dims2 = _dims select 1;
+                _maxWidth = abs((_dims1 select 1)-(_dims2 select 1));
+                _obj attachTo [player, [0, -(_maxWidth/2.0+0.2), 0], "Pelvis"];
                 
-                _obj setVariable ["pickObj_pickedUp", false, true];
-                //_obj setvariable ["pickObj_whoHas", 0, true]; // leave untouched to record previous owner
-                _newPos = [_caller, 0.5] call qb_fnc_getPosNearObject;
-                _newPos set [2, (getPosATL _caller) select 2];
-                _obj setPosATL _newPos;
-                [ _obj, true ] remoteExec ["enableSimulation", 0, false];
-                //{(player getVariable "pickObj_obj") enableSimulation true;} remoteExec ["bis_fnc_call", 0, false];
-                
-                _target removeAction _id;
-                _target setVariable ["pickObj_obj", objNull, true];
-            }, [_obj], 0, false, true, "", "true"];
-            _unit setVariable ["pickObj_unitDropActId", _actId];
-            
-        }, [], 5, true, true, "", "true"];
+                _actId = _unit addAction ["<t color='#ff0000'>Drop " + (_obj getVariable "pickObj_name") + "</t>", {
+                    private ["_target", "_caller", "_id", "_args", "_obj"];
+                    
+                    _target = _this select 0;
+                    _caller = _this select 1;
+                    _id = _this select 2;
+                    _args = _this select 3;
+                    _obj = _args select 0;
+                    
+                    if (side _target != side _caller) exitWith {};
+                    
+                    detach _obj;
+                    
+                    _obj setVariable ["pickObj_pickedUp", false, true];
+                    //_obj setvariable ["pickObj_whoHas", 0, true]; // leave untouched to record previous owner
+                    _newPos = [_caller, 0.5] call qb_fnc_getPosNearObject;
+                    _newPos set [2, (getPosATL _caller) select 2];
+                    _obj setPosATL _newPos;
+                    //[ _obj, true ] remoteExec ["enableSimulation", 0, false];
+                    //{(player getVariable "pickObj_obj") enableSimulation true;} remoteExec ["bis_fnc_call", 0, false];
+                    
+                    _target removeAction _id;
+                    _target setVariable ["pickObj_obj", objNull, true];
+                }, [_obj], 0, false, true, "", "vehicle _this == _this"];
+                _unit setVariable ["pickObj_unitDropActId", _actId];
+            };
+        }, [], 5, true, true, "", "vehicle _this == _this"];
     };
     
     [_obj] spawn {
