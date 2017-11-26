@@ -17,6 +17,7 @@
                                 Typically, recreates (patrol) waypoints for the group. Arguments passed to this routine:
                                 [_grps, _argsToDefaultAction]
         4 _argsToDefaultAction  Extra arguments to pass to _defaultAction
+        5 _helpDistance         Maximum distance from which to come to help
         
     OUTPUT:
         None
@@ -44,12 +45,8 @@ if (!isServer) exitWith { false };
 qb_cfg_makeAlertGroup_alertTime = 120;
 qb_cfg_makeAlertGroup_debug = false;
 
-private ["_grps", "_enemyside", "_defaultAction", "_argsToDefaultAction"];
+params ["_grps", "_enemySide", ["_defaultAction", {}], ["_argsToDefaultAction", []], ["_helpDistance", 500]];
 
-_grps = _this select 0;          
-_enemySide = _this select 1;     
-_defaultAction = _this select 2; 
-_argsToDefaultAction = _this select 3;
 
 {
     _x setVariable ["qb_makeAlertGroup_grps", _grps];
@@ -57,13 +54,14 @@ _argsToDefaultAction = _this select 3;
     _x setVariable ["qb_makeAlertGroup_helpingGroup", grpNull];
     // set other defaults, too
     
-    [_x, _enemySide, _defaultAction, _argsToDefaultAction] spawn {
+    [_x, _enemySide, _defaultAction, _argsToDefaultAction, _helpDistance] spawn {
         private ["_grp", "_enemySide", "_defaultAction", "_argsToDefaultAction"];
         private ["_grpFriends", "_helpNeeded", "_helpNeeder", "_wp"];
         _grp = _this select 0;
         _enemySide = _this select 1;
         _defaultAction = _this select 2;
         _argsToDefaultAction = _this select 3;
+        _helpDistance = _this select 4;
         
         {
             _x addEventHandler ["Hit", {
@@ -167,8 +165,10 @@ _argsToDefaultAction = _this select 3;
                                     if (({alive _x} count (units _x)) > 0) then { 
                                         // only help group if it has any members left
                                         // (technical limitation: no members, no location available
-                                        _helpNeeded = true;
-                                        _helpNeeder = _x;
+                                        if ((leader _grp) distance2d (leader _helpNeeder) < _helpDistance) then {
+                                            _helpNeeded = true;
+                                            _helpNeeder = _x;
+                                        };
                                     };
                                 };
                             };

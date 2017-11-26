@@ -20,6 +20,7 @@ if (hasInterface) then {
             private ["_obj", "_pickedup", "_whohasit", "_me"];
             _me = _this select 0;
             _obj = _me getVariable ["pickObj_obj", objNull];
+            _me setVariable ["pickObj_obj", objNull];
             if (not isNull _obj) then {
                 _pickedup = _obj getVariable "pickObj_pickedUp";
                 _whohasit = _obj getVariable "pickObj_whoHas";
@@ -30,6 +31,31 @@ if (hasInterface) then {
                         //_obj setvariable ["pickObj_whoHas", 0, true]; // leave untouched to record previous owner
                         _newPos = [_me, 0.5] call qb_fnc_getPosNearObject;
                         _newPos set [2, (getPosATL _me) select 2];
+                        _obj setPosATL _newPos;
+                        //[ _obj, true ] remoteExec ["enableSimulation", 0, false];
+                    };
+                };
+            };
+            _me removeAction (_me getVariable ["pickObj_unitDropActId", -1]);
+            _me setVariable ["pickObj_unitDropActId", -1];
+        }];
+
+        player addEventHandler ["Respawn", {
+            private ["_obj", "_pickedup", "_whohasit", "_me"];
+            _me = _this select 0;
+            _corpse = _this select 1;
+            _obj = _corpse getVariable ["pickObj_obj", objNull];
+            _corpse setVariable ["pickObj_obj", objNull];
+            if (not isNull _obj) then {
+                _pickedup = _obj getVariable "pickObj_pickedUp";
+                _whohasit = _obj getVariable "pickObj_whoHas";
+                if ((not isNil "_pickedup") and (_pickedup)) then {
+                    if ((not isNil "_whohasit") and (_whohasit == _corpse)) then {
+                        detach _obj;
+                        _obj setVariable ["pickObj_pickedUp", false, true];
+                        //_obj setvariable ["pickObj_whoHas", 0, true]; // leave untouched to record previous owner
+                        _newPos = [_corpse, 0.5] call qb_fnc_getPosNearObject;
+                        _newPos set [2, (getPosATL _corpse) select 2];
                         _obj setPosATL _newPos;
                         //[ _obj, true ] remoteExec ["enableSimulation", 0, false];
                     };
