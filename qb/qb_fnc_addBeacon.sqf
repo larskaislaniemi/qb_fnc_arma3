@@ -3,17 +3,16 @@ _params = _this select 1;
 
 if (_mode == "enable") then {
     _obj = _params select 0;
-    _obj setVariable ["trh_beacon_enabled", true];
+    _obj setVariable ["qb_beacon_enabled", true];
     
     [_params] spawn {
         _params = _this select 0;
-        _obj = _params select 0;
-        _uncert = _params select 1; 
-        _pingtime = _params select 2; 
-        _markerName = _params select 3;
+        _params params ["_obj", "_uncert", "_pingtime", "_markerName", ["_locCode", { getPos (_this select 0) }] ];
         
-        while {_obj getVariable ["trh_beacon_enabled", false]} do {
-            _pos = [_obj, _uncert/2.0] call qb_fnc_getPosNearObject;
+        while {_obj getVariable ["qb_beacon_enabled", false]} do {
+            _exactPos = [_obj] call _locCode;
+            _pos = [_exactPos, _uncert/2.0] call qb_fnc_getPosNearPos;
+            //_pos = [_obj, _uncert/2.0] call qb_fnc_getPosNearObject;
             createMarker [_markerName, _pos];
             _markerName setMarkerShape "ELLIPSE";
             _markerName setMarkerBrush "Solid";
@@ -28,5 +27,5 @@ if (_mode == "enable") then {
 
 if (_mode == "disable") then {
     _obj = _params select 0;
-    _obj setVariable ["trh_beacon_enabled", false];
+    _obj setVariable ["qb_beacon_enabled", false];
 };

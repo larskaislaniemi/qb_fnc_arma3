@@ -168,8 +168,11 @@ if (hasInterface) then {
                     
                     _target removeAction _id;
                     _target setVariable ["pickObj_obj", objNull, true];
+                    
+                    [_obj] call (_obj getVariable ["pickObj_dropAction", {true}]);
                 }, [_obj], 0, false, true, "", "vehicle _this == _this"];
                 _unit setVariable ["pickObj_unitDropActId", _actId];
+                [_obj] call (_obj getVariable ["pickObj_pickAction", {true}]);
             };
         }, [], 5, true, true, "", "vehicle _this == _this"];
     };
