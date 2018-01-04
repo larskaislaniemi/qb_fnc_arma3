@@ -37,7 +37,7 @@ if (hasInterface) then {
                 };
             };
             _me removeAction (_me getVariable ["pickObj_unitDropActId", -1]);
-            _me setVariable ["pickObj_unitDropActId", -1];
+            _me setVariable ["pickObj_unitDropActId", -1, true];
         }];
 
         player addEventHandler ["Respawn", {
@@ -45,7 +45,7 @@ if (hasInterface) then {
             _me = _this select 0;
             _corpse = _this select 1;
             _obj = _corpse getVariable ["pickObj_obj", objNull];
-            _corpse setVariable ["pickObj_obj", objNull];
+            _corpse setVariable ["pickObj_obj", objNull, true];
             if (not isNull _obj) then {
                 _pickedup = _obj getVariable "pickObj_pickedUp";
                 _whohasit = _obj getVariable "pickObj_whoHas";
@@ -62,7 +62,7 @@ if (hasInterface) then {
                 };
             };
             _me removeAction (_me getVariable ["pickObj_unitDropActId", -1]);
-            _me setVariable ["pickObj_unitDropActId", -1];
+            _me setVariable ["pickObj_unitDropActId", -1, true];
         }];
 
         player addEventHandler ["Hit", {
@@ -86,7 +86,7 @@ if (hasInterface) then {
                     };
                 };
                 _me removeAction (_me getVariable ["pickObj_unitDropActId", -1]);
-                _me setVariable ["pickObj_unitDropActId", -1];
+                _me setVariable ["pickObj_unitDropActId", -1, true];
             };
         }];
         
@@ -171,7 +171,7 @@ if (hasInterface) then {
                     
                     [_obj] call (_obj getVariable ["pickObj_dropAction", {true}]);
                 }, [_obj], 0, false, true, "", "vehicle _this == _this"];
-                _unit setVariable ["pickObj_unitDropActId", _actId];
+                _unit setVariable ["pickObj_unitDropActId", _actId, true];
                 [_obj] call (_obj getVariable ["pickObj_pickAction", {true}]);
             };
         }, [], 5, true, true, "", "vehicle _this == _this"];

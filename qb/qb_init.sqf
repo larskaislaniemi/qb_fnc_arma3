@@ -1,8 +1,10 @@
 qb_fnc_pickObjInit = compile preprocessFileLineNumbers "qb\qb_fnc_pickObjInit.sqf";
 qb_fnc_pickObjInitClient = compile preprocessFileLineNumbers "qb\qb_fnc_pickObjInitClient.sqf";
 qb_fnc_pickObjGetPos = compile preprocessFileLineNumbers "qb\qb_fnc_pickObjGetPos.sqf";
+qb_fnc_pickObjForceDrop = compile preprocessFileLineNumbers "qb\qb_fnc_pickObjForceDrop.sqf";
 qb_fnc_getPosNearMarker = compile preprocessFileLineNumbers "qb\qb_fnc_getPosNearMarker.sqf";
 qb_fnc_getPosNearObject = compile preprocessFileLineNumbers "qb\qb_fnc_getPosNearObject.sqf";
+qb_fnc_getPosNearPos = compile preprocessFileLineNumbers "qb\qb_fnc_getPosNearPos.sqf";
 qb_fnc_makeAlertGroup = compile preprocessFileLineNumbers "qb\qb_fnc_makeAlertGroup.sqf";
 qb_fnc_knowsAboutSide = compile preprocessFileLineNumbers "qb\qb_fnc_knowsAboutSide.sqf";
 qb_fnc_orderGroupsToNearestBuilding = compile preprocessFileLineNumbers "qb\qb_fnc_orderGroupsToNearestBuilding.sqf";

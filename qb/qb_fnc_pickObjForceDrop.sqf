@@ -21,7 +21,11 @@ if (!isNull _obj) then {
             _unit setVariable ["pickObj_obj", objNull, true];
         };
         _actid = _unit getVariable ["pickObj_unitDropActId", -1];
-        if (_actid != -1) then { _unit removeAction _actid; };
+        if (_actid != -1) then { 
+            //[_actid] remoteExec ["removeAction", _unit, false];
+            { player removeAction (player getVariable "pickObj_unitDropActId"); } remoteExec ["BIS_fnc_call", _unit, false];
+            //_unit removeAction _actid; 
+        };
         _pos = [getPos _unit, 1] call qb_fnc_getPosNearPos;
         _obj setVariable ["pickObj_whoHas", objNull, true];
         _obj setVariable ["pickObj_pickedUp", false, true];
